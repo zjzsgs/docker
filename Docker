@@ -1,0 +1,94 @@
+Docker(http://www.imooc.com/learn/824)
+2013 docker开源 目前Docker1.13
+装应用的容器
+思想：
+	集装箱
+	标准化
+		运输方式
+		存储方式
+		API接口
+	隔离
+解决问题：
+	运行环境不一致
+	隔离性
+	快速扩展，弹性伸缩
+核心词汇：
+	build 构建镜像 集装箱 镜像
+	ship 运输镜像 码头 仓库
+	run 运行镜像 运行程序的地方 容器
+Docker运行过程：
+	去仓库把镜像拉到本地，然后用一条命令把镜像运行起来变成容器。
+镜像
+	image 文件 只读 联合文件系统
+容器
+	虚拟机 分层 最上层可读可写
+仓库
+	镜像-仓库-容器 
+	hub.docker.com/explore
+	c.163.com
+安装
+	win10: www.docker.com/products/docker#/windows
+	win10之外：http://www.docker.com/products/docker-toolbox
+	win7下安装：
+	安装一路next，桌面有三个图标：terminal、kitematic、virtualbox。打开终端需要安装boot2docker.iso,在github(https://github.com/boot2docker/boot2docker/releases)上下载复制到用户目录/.docker/machine/cache,重新启动docker。在MINGW64上输入docker version有client和server说明安装成功。
+linux上安装docker(http://www.imooc.com/article/16448)
+	1，检查内核版本 uname -r
+	centos和ubuntu内核显示不同，6.5的内核是小于3.10
+	升级内核：
+	2，使用sudo或root权限的用户登录 su/su root 切换到root用户
+	3，更新yum yum update
+	4，添加yum仓库
+	tee /etc/yum.repos.d/docker.repo <<-'EOF' +enter会出现>，然后直接复制下面的完整块。
+	[dockerrepo] 
+	name=Docker Repository 
+	baseurl=https://yum.dockerproject.org/repo/main/centos/$releasever/ 
+	enabled=1 
+	gpgcheck=1 
+	gpgkey=https://yum.dockerproject.org/gpg 
+	EOF
+	5，安装docker yum install -y docker-engine
+	 rpm -ivh http://dl.Fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+第一个docker镜像
+	docker pull [OPTIONS] NAME[:TAG] 拉取镜像
+	name是拉取镜像名称
+	[:TAG]可选，默认是latest最新版
+	docker images [OPTIONS] [REPOSITORY[:TAG]] 查看本机镜像 也可以验证拉取镜像是否成功
+	例：docker pull hello-world
+	这个镜像可以在官网找到名字，不加镜像地址则使用默认的。
+	docker images
+	repository  tag  image id  created  size 
+第一个docker容器
+	docker run [OPTIONS] IMAGE[:TAG] [COMMAND] [ARG..]
+	镜像——>容器
+运行nginx
+	持久运行的容器
+	前台挂机&后台运行
+	进入容器内部
+	登陆网易蜂巢(必须)，然后查找nginx镜像https://c.163.com/hub#/m/home/。选择library /nginx，复制下载地址docker pull hub.c.163.com/library/nginx:latest到docker终端。
+	前台运行 docker run hub.c.163.com/library/nginx
+	docker ps 查看当前运行的容器(新开窗口)
+	Ctrl+C停止容器
+	后台运行 docker run -d hub.c.163.com/library/nginx
+	返回字符串是容器ID
+	进入容器内部 docker exec --help
+	docker exec -it 33e bash
+	ls 查看容器内部结构
+	which nginx 查看nginx位置
+	ps -ef 查看当前服务有哪些进程(不能用？)
+	exit 退出容器
+	docker stop 容器ID 停止容器
+	clear命令=ctrl+L
+docker网络
+	网络类型：默认桥接
+	bridge 网桥 容器中有独立的IP和端口
+	host 主机跟容器使用同一个网卡
+	none 无网络
+	端口映射：
+	docker run -d -p 8080:80 hub.c.163.com/library/nginx
+	8080是主机端口 80是容器端口
+	netstat -na|grep 8080(查不到？)
+	查看网页http://192.168.99.100:8080/
+	localhost:8080不能访问
+	随机端口映射
+	docker run -d -P hub.c.163.com/library/nginx
+	http://192.168.99.100:32768/
