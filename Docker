@@ -48,6 +48,19 @@ linux上安装docker(http://www.imooc.com/article/16448)
 	EOF
 	5，安装docker yum install -y docker-engine
 	 rpm -ivh http://dl.Fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+在ubuntu上安装docker
+	1，检查内核版本 uname -r    4.10.0-37-generic
+	2，暂时切到root用户 su
+		输入密码，认证失败，因为root用户默认被锁定。
+		解决：
+		sudo passwd
+		输入三次密码，重新进入root用户。
+	3，apt-get update
+	4，apt-get install -y docker.io
+	上面安装的是软件源里的docker，可能不是最新版本。下面方法：
+	curl -s http://get.docker.com|sh
+	5,docker version 可以看到client和server，如果服务器没有启动，service docker start
+	
 第一个docker镜像
 	docker pull [OPTIONS] NAME[:TAG] 拉取镜像
 	name是拉取镜像名称
